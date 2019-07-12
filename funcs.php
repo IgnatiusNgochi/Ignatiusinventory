@@ -79,6 +79,36 @@ function get_prod_id($id)
 	return $id;
 		
 }
+function reorder($id)
+{
+	
+	$l = db();
+	$sql = "select * from reorders where id='$id' and reorder_status = 1";
+	$re = mysqli_query($l,$sql);
+	if(mysqli_num_rows($re) > 0) //reorder request filled
+	{
+		$resp = "Reorder request already filled. ";
+		return $resp;
+	}
+	$pid = get_prod_id($id);
+	$qtty = get_reorder_qtty($pid);
+	$sql = "update products set quantity = quantity + $qtty where id = '$pid'";
+	$re = mysqli_query($l,$sql);
+	$resp = "Error filling the reorder";
+	if($re)
+	{
+		$sql = "update reorders set date_filled=now(), reorder_status=1 where id = '$id'";
+		$re2 = mysqli_query($l,$sql);
+	}
+	if(@$re2)
+	{
+		$resp = "Reorder succefully filled";
+	}
+	//check here and do commit/rollback
+    return $resp;	
+	
+	
+}
 
 
 ?>
