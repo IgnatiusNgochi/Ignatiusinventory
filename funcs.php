@@ -1,7 +1,7 @@
 <?php
 function db()
 {
-	$li = mysqli_connect("localhost","root","baraza");
+	$li = mysqli_connect("localhost","root","");
 	mysqli_select_db($li,"inventory");
 	return $li;
 	
